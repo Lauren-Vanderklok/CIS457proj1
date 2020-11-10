@@ -60,6 +60,7 @@ class FTPClient {
                         System.out.println("	" + modifiedSentence);
                     }
 
+                    modifiedSentence = null;
                     welcomeData.close();
                     dataSocket.close();
                     System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
@@ -73,7 +74,7 @@ class FTPClient {
                     String filename = sentence.substring(5);
                     File downloadedFile = new File(filename);
                     PrintWriter write = new PrintWriter(downloadedFile);
-                    String buffer; //because printwriter has no append function for strings, Im storing everything in this and then writing it to the file
+                    String buffer = ""; //because printwriter has no append function for strings, Im storing everything in this and then writing it to the file
                     //we may want to change this later but this seems simple and workable for now
                     Socket dataSocket = welcomeData.accept(); //accept data connection
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
@@ -88,23 +89,60 @@ class FTPClient {
 
                     write.print(buffer);
 
-                    String buffer = null;
+                    buffer = null;
+                    modifiedSentence = null;
                     write.close();
                     welcomeData.close();
                     dataSocket.close();
                     System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
 
 
-                }
-                else  if (sentence.startsWith("stor: ")) {
+                } else if (sentence.startsWith("stor: ")) {
 
-                }
-                }
-                 else {
+                    String filename = sentence.substring(7);
+                    File uploadedFile = new File(filename);
+
+                    if (!uploadedFile.exists()) {
+                        System.out.println("file does not exist in working directory");
+                    } else {
+                        port = port + 2;
+                        System.out.println(port);
+                        ServerSocket welcomeData = new ServerSocket(port);
+                        outToServer.writeBytes(port + " " + sentence + " " + '\n');
+                        System.out.println("\n \n Uploading File ...:");
+                        Scanner read = new Scanner(filename);
+                        Socket dataSocket = welcomeData.accept(); //accept data connection
+                        DataOutputStream outData = new DataOutputStream(dataSocket.getOutputStream());
+
+                        while (notEnd) {
+                            modifiedSentence = read.nextLine();
+                            outData.writeUTF(modifiedSentence); // the write is before the break unlike previous methods because if we have reached the EOF we still want to send it to the server
+
+                            if (modifiedSentence.equals("eof")) {
+                                break;
+                            }
+                        }
+
+
+                        read.close();
+                        modifiedSentence = null;
+                        welcomeData.close();
+                        dataSocket.close();
+                    }
+                    System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
+                } else {
                     if (sentence.equals("close")) {
                         clientgo = false;
+                        ControlSocket.close();
+                        //this may need to be added to idk
                     }
                     System.out.print("No server exists with that name or server not listening on that port try agian");
+                }
+
+
+
+
+
 
                 }
             }
