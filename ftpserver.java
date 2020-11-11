@@ -107,19 +107,31 @@ import javax.swing.*;
                 if(clientCommand.equals("stor:"))
                 {
                     Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-                    DataOutputStream dataOutToClient = 
-                    new DataOutputStream(dataSocket.getOutputStream());
+                    DataInputStream clientInput = new DataInputStream(
+                    new BufferedInputStream(dataSocket.getInputStream()));
                     
-                    byte[] dataIn = new byte[dataOutToClient.readInt()];
-                    
-                    while(dataOutToClient.available() == 0) {
-
-                    }
+                    //read data from client
+                    byte[] dataIn = new byte[clientInput.readByte()];
 
                     //get the working directory
                     String filePath = System.getProperty("user.dir") + "/";
-                    String fileName = dataOutToClient.readUTF();
-                    dataOutToClient.readFully()
+                    //get the file name from the client
+                    String fileName = clientInput.readUTF();
+                    filePath += fileName;
+
+                    System.out.println("Storing " + fileName + " in the current directory")
+                    
+                    //read the bytes to file
+                    clientInput.readFully(dataIn);
+
+                    //write bytes to file
+                    try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                        fos.write(dataIn);
+                    }
+
+                    //stor has been performed, terminate the connection
+                    clientInput.close();
+                    dataSocket.close();
                 }
             }
             //main
