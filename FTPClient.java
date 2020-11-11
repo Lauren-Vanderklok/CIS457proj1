@@ -12,8 +12,8 @@ class FTPClient {
         boolean isOpen = true;
         int number = 1;
         boolean notEnd = true;
-        int port1 = 1221;
-        int port = 1200;
+        int port1 = 8907;
+        int port = 8907;
         String statusCode;
         boolean clientgo = true;
 
@@ -52,6 +52,7 @@ class FTPClient {
                     outToServer.writeBytes(port + " " + sentence + " " + '\n');
 
                     Socket dataSocket = welcomeData.accept(); //accept data connection
+                    System.out.println("data connection established");
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
                     while (notEnd) {
                         modifiedSentence = inData.readUTF();

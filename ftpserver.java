@@ -10,7 +10,7 @@ public class ftpserver extends Thread {
     /** controlSocket that reads and sends command outputs to the client */
     Socket controlSocket;
 
-    int port;
+    int port = 8909;
     int count = 1;
 
 
@@ -79,7 +79,8 @@ public class ftpserver extends Thread {
             if (command.equals("list:")) {
                 //list command should only have 1 input, "list"
                 //thus get the first String in the list
-                Socket dataSocket = makeServerSocket(Integer.parseInt(clientCommands.get(0)));
+                Socket dataSocket = new Socket (connectionSocket.getInetAddress(), port);
+                        //makeServerSocket(Integer.parseInt(clientCommands.get(0)));
                 DataOutputStream dataOutToClient = new DataOutputStream(dataSocket.getOutputStream());
 
                 String files = listFiles();
@@ -96,6 +97,7 @@ public class ftpserver extends Thread {
             }
             else if (command.equals("get: ")){}
             else if (command.equals("stor: ")){}
+
 
         }
 
