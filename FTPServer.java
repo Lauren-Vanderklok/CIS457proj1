@@ -46,10 +46,10 @@ public class FTPServer {
                     DataOutputStream dataOutToClient.writeUTF(files);
                     
                     //clean up the stream before closing.
-				    dataOutToClient.flush();
-				    dataOutToClient.close();
-				    System.out.println("eof");
-				    dataSocket.close();
+		    dataOutToClient.flush();
+		    dataOutToClient.close();
+		    System.out.println("eof");
+		    dataSocket.close();
                     System.out.println("Data Socket closed.\n");
                 }
                 //get or retr command
@@ -68,9 +68,9 @@ public class FTPServer {
 	 * over.
 	 * 
 	 * @param port 
-     *      The port the server will run on.
+         *      The port the server will run on.
 	 * @return Socket 
-     *      The dataSocket object that was created.
+         *      The dataSocket object that was created.
 	 *****************************************************************/
     private Socket makeServerSocket(int port) {
         System.out.println("Making data socket...");
@@ -86,7 +86,7 @@ public class FTPServer {
 	 * Returns a list of all the files in the current directory.
 	 * 
 	 * @return list 
-     *      A string of all the files.
+         *      A string of all the files.
 	 *****************************************************************/
 	private static String listFiles() {
 		File curDir = new File(".");
