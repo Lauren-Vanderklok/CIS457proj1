@@ -31,11 +31,14 @@ public class ftpserver extends Thread {
     /** Checks to see if the connection is still being held */
     boolean serverRun = true;
 
+    Socket connectionSocket;
 
     public ftpserver(Socket connectionSocket)  {
 
         this.connectionSocket = connectionSocket;
     }
+
+
 
 
     public void run() {
