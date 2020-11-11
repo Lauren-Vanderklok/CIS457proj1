@@ -102,8 +102,25 @@ import javax.swing.*;
 
                 if(clientCommand.equals("get:"))
                 {
-             
+                   
+                }
+                if(clientCommand.equals("stor:"))
+                {
+                    Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                    DataOutputStream dataOutToClient = 
+                    new DataOutputStream(dataSocket.getOutputStream());
+                    
+                    byte[] dataIn = new byte[dataOutToClient.readInt()];
+                    
+                    while(dataOutToClient.available() == 0) {
 
+                    }
+
+                    //get the working directory
+                    String filePath = System.getProperty("user.dir") + "/";
+                    String fileName = dataOutToClient.readUTF();
+                    dataOutToClient.readFully()
+                }
             }
             //main
         }
