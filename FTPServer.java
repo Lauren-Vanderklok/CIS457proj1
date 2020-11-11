@@ -24,7 +24,7 @@ public class FTPServer {
     /** Holds whatever command that came from the client */
     String command;
 
-    /** Checks to see if the connection is still being helf */
+    /** Checks to see if the connection is still being held */
     boolean serverRun = true;
 
     public void run() {
@@ -46,10 +46,10 @@ public class FTPServer {
                     DataOutputStream dataOutToClient.writeUTF(files);
                     
                     //clean up the stream before closing.
-					dataOutToClient.flush();
-					dataOutToClient.close();
-					System.out.println("List sent successfully");
-					dataSocket.close();
+				    dataOutToClient.flush();
+				    dataOutToClient.close();
+				    System.out.println("eof");
+				    dataSocket.close();
                     System.out.println("Data Socket closed.\n");
                 }
                 //get or retr command
