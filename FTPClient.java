@@ -160,12 +160,26 @@ public class FTPClient {
                 } else {
                     //looks to see if the close command was entered
                     if (sentence.equals("close")) {
+                        ServerSocket welcomeData = new ServerSocket(port); //opens port to listen to data connection
+                        outToServer.writeBytes(port + " " + sentence + " " + '\n');
+                        Socket dataSocket = welcomeData.accept(); //accept data connection
+                        DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
 
-                        clientgo = false;
-                        ControlSocket.close();
-                        //this may need to be added to idk
-                    }else {
-                        System.out.print("invalid command");
+                        while (true) {
+                            String str = inData.readUTF();
+
+                            if (str.equals("close")) {
+                                clientgo = false;
+                                welcomeData.close();
+                                dataSocket.close();
+
+                                //ControlSocket.close();
+                                System.out.println("out");
+                                System.exit(0);
+                            }
+
+                        
+                        }
                     }
                 }
             }
