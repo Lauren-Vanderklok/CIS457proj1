@@ -100,8 +100,10 @@ class FTPClient {
 
                 } else if (sentence.startsWith("stor: ")) {
 
-                    String filename = sentence.substring(7);
+                    String filename = sentence.substring(6);
+                    System.out.println("filename strnig: "+ filename);
                     File uploadedFile = new File(filename);
+                    System.out.println("filepath: "+ uploadedFile.toString());
 
                     if (!uploadedFile.exists()) {
                         System.out.println("file does not exist in working directory");
@@ -114,14 +116,21 @@ class FTPClient {
                         Scanner read = new Scanner(filename);
                         Socket dataSocket = welcomeData.accept(); //accept data connection
                         DataOutputStream outData = new DataOutputStream(dataSocket.getOutputStream());
+                        //modifiedSentence = read.nextLine();
 
-                        while (notEnd) {
+                        while (read.hasNextLine()) {
+//                            modifiedSentence = read.nextLine();
+//                             // the write is before the break unlike previous methods because if we have reached the EOF we still want to send it to the server
+//
+//                            if (modifiedSentence==null) {
+//                                break;
+//                            }
+
                             modifiedSentence = read.nextLine();
-                            outData.writeUTF(modifiedSentence); // the write is before the break unlike previous methods because if we have reached the EOF we still want to send it to the server
+                            System.out.println("line1:" + modifiedSentence);
+                            outData.writeUTF(modifiedSentence);
 
-                            if (modifiedSentence.equals("eof")) {
-                                break;
-                            }
+                            //System.out.println("line2:" + modifiedSentence);
                         }
 
 
