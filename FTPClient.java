@@ -13,7 +13,7 @@ class FTPClient {
         int number = 1;
         boolean notEnd = true;
         int port1 = 8907;
-        int port = 8907;
+        int port = 8909;
         String statusCode;
         boolean clientgo = true;
 
@@ -44,7 +44,7 @@ class FTPClient {
 
                 if (sentence.equals("list:")) {
 
-                    port = port + 2;
+
                     System.out.println(port);
                     ServerSocket welcomeData = new ServerSocket(port); //opens port to listen to data connection
 
@@ -67,7 +67,7 @@ class FTPClient {
                     System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
 
                 } else if (sentence.startsWith("get: ")) {
-                    port = port + 2;
+
                     System.out.println(port);
                     ServerSocket welcomeData = new ServerSocket(port); //opens port to listen to data connection
                     System.out.println("\n \n Downloading File ...:");
@@ -108,29 +108,19 @@ class FTPClient {
                     if (!uploadedFile.exists()) {
                         System.out.println("file does not exist in working directory");
                     } else {
-                        port = port + 2;
+
                         System.out.println(port);
                         ServerSocket welcomeData = new ServerSocket(port);
                         outToServer.writeBytes(port + " " + sentence + " " + '\n');
                         System.out.println("\n \n Uploading File ...:");
-                        Scanner read = new Scanner(filename);
+                        Scanner read = new Scanner(uploadedFile);
                         Socket dataSocket = welcomeData.accept(); //accept data connection
                         DataOutputStream outData = new DataOutputStream(dataSocket.getOutputStream());
-                        //modifiedSentence = read.nextLine();
 
                         while (read.hasNextLine()) {
-//                            modifiedSentence = read.nextLine();
-//                             // the write is before the break unlike previous methods because if we have reached the EOF we still want to send it to the server
-//
-//                            if (modifiedSentence==null) {
-//                                break;
-//                            }
-
                             modifiedSentence = read.nextLine();
                             System.out.println("line1:" + modifiedSentence);
                             outData.writeUTF(modifiedSentence);
-
-                            //System.out.println("line2:" + modifiedSentence);
                         }
 
 
