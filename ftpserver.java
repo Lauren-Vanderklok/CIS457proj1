@@ -168,7 +168,7 @@ import javax.swing.*;
                     dataSocket.close();
                 }
 
-                else if (clientCommand.equals("close")) {
+                else if (clientCommand.equals("close:")) {
 					System.out.println("Closing connection " + 
 							connectionSocket.getInetAddress().getHostName() + ".");
 					outToClient.close();
