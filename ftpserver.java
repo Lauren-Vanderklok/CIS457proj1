@@ -106,13 +106,19 @@ import javax.swing.*;
                         System.out.println("filename:" + filename + "...");
                         File file = new File(filename);
 
+                         Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                            DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
 
                         if (!file.exists()) {
-                            System.out.println("status code: 550. file does not exist");
+
+                            serverOutput.writeUTF("status code: 550. file does not exist");
+                            serverOutput.writeUTF("eof");
+                            serverOutput.writeUTF("eof");
                         }else {
-                            System.out.println("status code 200. ok");
-                            Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-                            DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
+
+                            serverOutput.writeUTF("status code 200. ok");
+                            serverOutput.writeUTF("eof");
+
 
                             Scanner read = new Scanner(file);
                             String line;
@@ -120,7 +126,6 @@ import javax.swing.*;
 
                             while (read.hasNextLine()) {
                                 line = read.nextLine();
-                                System.out.println("line:" + line);
                                 serverOutput.writeUTF(line);
                             }
                             serverOutput.writeUTF("eof");
@@ -151,7 +156,7 @@ import javax.swing.*;
                     filePath += fileName;
 
                     System.out.println("Storing " + fileName + " in the current directory");
-                
+
                     //write bytes to file
                     try (FileOutputStream fos = new FileOutputStream(filePath)) {
                         fos.write(dataIn);

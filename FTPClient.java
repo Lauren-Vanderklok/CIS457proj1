@@ -80,8 +80,21 @@ class FTPClient {
                     Socket dataSocket = welcomeData.accept(); //accept data connection
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
 
-                    while (true) {
+
+
+                        while (true) {
+                            String error = inData.readUTF();
+
+                            if (error.equals("eof"))
+                                break;
+                            System.out.println(error);
+                        }
+
+                        while (true) {
+
                         modifiedSentence = inData.readUTF();
+
+
 
                         if (modifiedSentence.equals("eof")) {
                             break;
@@ -135,6 +148,7 @@ class FTPClient {
                     System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
                 } else {
                     if (sentence.equals("close")) {
+
                         clientgo = false;
                         ControlSocket.close();
                         //this may need to be added to idk
