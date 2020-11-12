@@ -21,11 +21,9 @@ public class ftpserver extends Thread {
     /** port number modeled after one of our groupmates Gnumber */
     int port = 8909;
 
-    /** variable used to hold the count */
-    int count = 1;
 
     /** determines if a connection has been formed */
-   // boolean clientgo = true;
+    boolean clientgo = true;
         
     /**********************************************************************
     * Initializer method for the FTPserver.
@@ -41,10 +39,10 @@ public class ftpserver extends Thread {
     * Run method that acts as our Main().
     **********************************************************************/
     public void run() {
-        if(count==1) {
+
             System.out.println("User connected" + connectionSocket.getInetAddress());
-        }
-        count++;
+
+
 
         //perform the tasks/commands received by the client
 	    try {
@@ -68,28 +66,28 @@ public class ftpserver extends Thread {
         String frstln;
                     
         //while a connection has been formed
-        while(true) {
+        while(clientgo) {
             
-            if(count==1) {
-                System.out.println("User connected" + connectionSocket.getInetAddress());
-            }
-            count++;
+
+                //System.out.println("User connected" + connectionSocket.getInetAddress());
+
+
             
             //used to hold what will be sent OUT to the client
             DataOutputStream  outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+
             //used to hold what come IN from the client
             BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+
             //takes in the whole string from the client
             fromClient = inFromClient.readLine();
-            
-      		//System.out.println(fromClient);
+
             StringTokenizer tokens = new StringTokenizer(fromClient);
             
             frstln = tokens.nextToken();
             port = Integer.parseInt(frstln);
 
             clientCommand = tokens.nextToken();
-            //System.out.println(clientCommand);
 
             //list command
             if(clientCommand.equals("list:")) { 
@@ -111,20 +109,20 @@ public class ftpserver extends Thread {
 
                         if(filename.endsWith(".txt"))  {
                             dataOutToClient.writeUTF(children[i]);
-                            //System.out.println(filename);
+
                         }
                         if(i-1==children.length-2) {
                             dataOutToClient.writeUTF("eof");
-                            // System.out.println("eof");
-                        }//if(i-1)
+
+                        }
 
      
-                    }//for
+                    }
 
                     dataSocket.close();
-		            //System.out.println("Data Socket closed");
-                }//else
-            }//if list:
+
+                }
+            }
 
             //get command
             else if(clientCommand.equals("get:")) {
@@ -136,28 +134,22 @@ public class ftpserver extends Thread {
                 DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
 
                 if (!file.exists()) {
-
                     serverOutput.writeUTF("status code: 550. file does not exist");
-                    serverOutput.writeUTF("eof");
-
+                    serverOutput.writeUTF("eof"); //let client know that error message is over
                 }
                 else {
 
                     serverOutput.writeUTF("status code 200. ok");
                     serverOutput.writeUTF("eof");
 
-
                     Scanner read = new Scanner(file);
                     String line;
 
-
                     while (read.hasNextLine()) {
                         line = read.nextLine();
-
                         serverOutput.writeUTF(line);
-
                     }
-                    serverOutput.writeUTF("eof");
+                    serverOutput.writeUTF("eof"); //let client know that file transmission is over
                     read.close();
                     serverOutput.close();
                     dataSocket.close();
@@ -175,7 +167,7 @@ public class ftpserver extends Thread {
 
                 File storedFile = new File(fileName);
                 PrintWriter write = new PrintWriter(storedFile);
-                String buffer = "";
+                String buffer = ""; //buffer to be writen to file later
 
                 System.out.println("Storing " + fileName + " in the current directory");
 
@@ -204,15 +196,10 @@ public class ftpserver extends Thread {
             //close command
             else if (clientCommand.equals("close")) {
 				System.out.println("Closing connection " + connectionSocket.getInetAddress().getHostName() + ".");
-                //Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-                //DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
-
                 outToClient.close();
                 inFromClient.close();
                 connectionSocket.close();
-                //dataSocket.close();
-               // clientgo = false;
-                //serverOutput.writeUTF("close");
+                clientgo = false;
                 return;
 			}
         }

@@ -90,10 +90,8 @@ public class FTPClient {
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
 
                     String error = "";
-
                         while (true) {
                             String line = inData.readUTF();
-
                             if (line.equals("eof"))
                                 break;
 
@@ -104,29 +102,20 @@ public class FTPClient {
 
                         if (error.equals("status code 200. ok")) {
 
-
-
                             String filename = sentence.substring(5);
                             File downloadedFile = new File(filename);
 
                             PrintWriter write = new PrintWriter(downloadedFile);
 
-                            String buffer = ""; //because printwriter has no append function for strings, Im storing everything in this and then writing it to the file
-
-
+                            String buffer = ""; //because printwriter has no append function for strings, I'm storing everything in this and then writing it to the file
 
                             while (true) {
-
                                 modifiedSentence = inData.readUTF();
-
-
-
                                 if (modifiedSentence.equals("eof")) {
                                     break;
                                 }
                                 buffer = buffer.concat(modifiedSentence);
                                 buffer = buffer.concat("\n");
-
                             }
 
                             write.print(buffer);
@@ -134,7 +123,6 @@ public class FTPClient {
                             buffer = null;
                             modifiedSentence = null;
                             write.close();
-
                         }
 
                     welcomeData.close();
@@ -163,7 +151,6 @@ public class FTPClient {
 
                         while (read.hasNextLine()) {
                             modifiedSentence = read.nextLine();
-                            System.out.println("line1:" + modifiedSentence);
                             outData.writeUTF(modifiedSentence);
                         }
 
@@ -177,25 +164,13 @@ public class FTPClient {
                 } else {
                     //looks to see if the close command was entered
                     if (sentence.equals("close")) {
-                      //  ServerSocket welcomeData = new ServerSocket(port); //opens port to listen to data connection
                         outToServer.writeBytes(port + " " + sentence + " " + '\n');
-                        //Socket dataSocket = welcomeData.accept(); //accept data connection
-                       // DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
 
-                       // while (true) {
-                            //String str = inData.readUTF();
+                        clientgo = false;
+                        ControlSocket.close();
+                        System.out.println("out");
+                        System.exit(0);
 
-                           // if (str.equals("close")) {
-                                clientgo = false;
-                               // welcomeData.close();
-                               // dataSocket.close();
-                                ControlSocket.close();
-                                System.out.println("out");
-                                System.exit(0);
-                         //   }
-
-                        
-                      //  }
                     }
                 }
             }
