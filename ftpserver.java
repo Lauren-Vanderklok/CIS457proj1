@@ -102,15 +102,30 @@ import javax.swing.*;
 
                 if(clientCommand.equals("get:"))
                 {
-                    Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-                    DataInputStream clientInput = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
+                    //if(fileName not supplied) {
+                        //System.out.println("No file supplied");
+                        //outToClient.writeInt(550);
+                        //continue;
+                    //}
+
+                    //String filePath = System.getProperty("user.dir") + "/";
+                    //File fileToSend = new File(filePath + something);
+                    
+                    //if(fileToSend does not exist) {
+                        //System.out.println("File does not exist.");
+                        //outToClient.writeInt(550);
+                        //continue;
+                    //}
+                    //else {
+                        //open connection with the client
+                        Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                        DataInputStream clientInput = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
 
 
 
 
-
-                    clientInput.close();
-                    dataSocket.close();
+                        clientInput.close();
+                        dataSocket.close();
                 }
 
                 if(clientCommand.equals("stor:"))
