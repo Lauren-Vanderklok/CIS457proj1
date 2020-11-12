@@ -82,13 +82,15 @@ class FTPClient {
 
                     while (true) {
                         modifiedSentence = inData.readUTF();
-                        System.out.println(modifiedSentence);
+
                         if (modifiedSentence.equals("eof")) {
                             break;
                         }
-                        buffer.concat(modifiedSentence);
+                        buffer = buffer.concat(modifiedSentence);
+                        buffer = buffer.concat("\n");
+
                     }
-                    System.out.println("buffer:" + buffer);
+
 
 
 
