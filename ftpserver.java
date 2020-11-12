@@ -18,18 +18,17 @@ import javax.swing.*;
     }
 
 
-      public void run() 
-        {
+      public void run() {
                 if(count==1)
                     System.out.println("User connected" + connectionSocket.getInetAddress());
                 count++;
 
-	try {
-		processRequest();
+	   try {
+	       processRequest();
 		
-	} catch (Exception e) {
-		System.out.println(e);
-	}
+	    } catch (Exception e) {
+		    System.out.println(e);
+	    }
 	 
 	}
 	
@@ -56,6 +55,7 @@ import javax.swing.*;
             
                 frstln = tokens.nextToken();
                 port = Integer.parseInt(frstln);
+
                 clientCommand = tokens.nextToken();
                 //System.out.println(clientCommand);
 
@@ -118,14 +118,34 @@ import javax.swing.*;
                     //}
                     //else {
                         //open connection with the client
-                        Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-                        DataInputStream clientInput = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
+
+                        String filename = tokens.nextToken();
+                        System.out.println("filename:" + filename + "...");
+                        File file = new File(filename);
 
 
+                        if (!file.exists()) {
+                            System.out.println("status code: 550. file does not exist");
+                        }else {
+                            System.out.println("status code 200. ok");
+                            Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                            DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
+
+                            Scanner read = new Scanner(file);
+                            String line;
 
 
-                        clientInput.close();
-                        dataSocket.close();
+                            while (read.hasNextLine()) {
+                                line = read.nextLine();
+                                System.out.println("line:" + line);
+                                serverOutput.writeUTF(line);
+                            }
+                            serverOutput.writeUTF("eof");
+                            read.close();
+                            serverOutput.close();
+                            dataSocket.close();
+                        }
+
                 }
 
                 if(clientCommand.equals("stor:"))
@@ -143,7 +163,7 @@ import javax.swing.*;
                     String fileName = clientInput.readUTF();
                     filePath += fileName;
 
-                    System.out.println("Storing " + fileName + " in the current directory")
+                    System.out.println("Storing " + fileName + " in the current directory");
                     
                     //write bytes to file
                     try (FileOutputStream fos = new FileOutputStream(filePath)) {

@@ -80,13 +80,17 @@ class FTPClient {
                     Socket dataSocket = welcomeData.accept(); //accept data connection
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
 
-                    while (notEnd) {
+                    while (true) {
                         modifiedSentence = inData.readUTF();
+                        System.out.println(modifiedSentence);
                         if (modifiedSentence.equals("eof")) {
                             break;
                         }
                         buffer.concat(modifiedSentence);
                     }
+                    System.out.println("buffer:" + buffer);
+
+
 
                     write.print(buffer);
 
@@ -101,7 +105,7 @@ class FTPClient {
                 } else if (sentence.startsWith("stor: ")) {
 
                     String filename = sentence.substring(6);
-                    System.out.println("filename strnig: "+ filename);
+                    System.out.println("filename string: "+ filename);
                     File uploadedFile = new File(filename);
                     System.out.println("filepath: "+ uploadedFile.toString());
 
