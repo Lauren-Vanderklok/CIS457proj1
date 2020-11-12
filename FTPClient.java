@@ -4,7 +4,18 @@ import java.util.*;
 import java.text.*;
 import java.lang.*;
 import javax.swing.*;
-class FTPClient { 
+
+/**********************************************************************
+* FTPClient class that is what the USER interacts with. 
+* This class asks for a connection to be formed between the client
+* and the server. 
+* Afterwards, certain commands are listed and supported if to be
+* entered in the command line.
+*
+* @author Christian Thompson, James Weitzmanm, Josh Hubbard, 
+*         Lauren Vanderklok, & Scott Weaver 
+**********************************************************************/
+public class FTPClient { 
 
     public static void main(String argv[]) throws Exception {
         String sentence;
@@ -29,7 +40,7 @@ class FTPClient {
         sentence = inFromUser.readLine();
         StringTokenizer tokens = new StringTokenizer(sentence);
 
-
+        //connects the client with the server
         if (sentence.startsWith("connect")) {
             String serverName = tokens.nextToken(); // pass the connect command
             serverName = tokens.nextToken(); //severname is ip
@@ -42,6 +53,7 @@ class FTPClient {
                 DataOutputStream outToServer = new DataOutputStream(ControlSocket.getOutputStream());
                 DataInputStream inFromServer = new DataInputStream(new BufferedInputStream(ControlSocket.getInputStream()));
 
+                //looks to see if the list command was entered
                 if (sentence.equals("list:")) {
 
 
@@ -66,6 +78,7 @@ class FTPClient {
                     dataSocket.close();
                     System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
 
+                //looks to see if the get command was entered
                 } else if (sentence.startsWith("get: ")) {
 
                     System.out.println(port);
@@ -79,8 +92,6 @@ class FTPClient {
                     //we may want to change this later but this seems simple and workable for now
                     Socket dataSocket = welcomeData.accept(); //accept data connection
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
-
-
 
                         while (true) {
                             String error = inData.readUTF();
@@ -113,7 +124,7 @@ class FTPClient {
                     dataSocket.close();
                     System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
 
-
+                //looks to see if the stor command was entered
                 } else if (sentence.startsWith("stor: ")) {
 
                     String filename = sentence.substring(6);
@@ -147,6 +158,7 @@ class FTPClient {
                     }
                     System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");
                 } else {
+                    //looks to see if the close command was entered
                     if (sentence.equals("close")) {
 
                         clientgo = false;
@@ -156,13 +168,7 @@ class FTPClient {
                         System.out.print("invalid command");
                     }
                 }
-
-
-
-
-
-
-                }
             }
         }
     }
+}
