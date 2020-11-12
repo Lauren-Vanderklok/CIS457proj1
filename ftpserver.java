@@ -108,13 +108,19 @@ import javax.swing.*;
                         System.out.println("filename:" + filename + "...");
                         File file = new File(filename);
 
+                         Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                            DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
 
                         if (!file.exists()) {
-                            System.out.println("status code: 550. file does not exist");
+
+                            serverOutput.writeUTF("status code: 550. file does not exist");
+                            serverOutput.writeUTF("eof");
+                            serverOutput.writeUTF("eof");
                         }else {
-                            System.out.println("status code 200. ok");
-                            Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-                            DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
+
+                            serverOutput.writeUTF("status code 200. ok");
+                            serverOutput.writeUTF("eof");
+
 
                             Scanner read = new Scanner(file);
                             String line;
@@ -122,7 +128,6 @@ import javax.swing.*;
 
                             while (read.hasNextLine()) {
                                 line = read.nextLine();
-                                System.out.println("line:" + line);
                                 serverOutput.writeUTF(line);
                             }
                             serverOutput.writeUTF("eof");
@@ -143,6 +148,7 @@ import javax.swing.*;
                     data = new byte[clientInput.readByte()];
 
                     //added due to java.io.EOFException
+<<<<<<< HEAD
                     while(clientInput.available() != 0) {
                         //get the working directory
                         String filePath = System.getProperty("user.dir") + "/";
@@ -156,6 +162,22 @@ import javax.swing.*;
                         try (FileOutputStream fos = new FileOutputStream(filePath)) {
                             fos.write(data);
                         }
+=======
+                    while(clientInput.available() == 0) {
+                        Thread.sleep(10);
+                    }
+                    //get the working directory
+                    String filePath = System.getProperty("user.dir") + "/";
+                    //get the file name from the client
+                    String fileName = clientInput.readUTF();
+                    filePath += fileName;
+
+                    System.out.println("Storing " + fileName + " in the current directory");
+
+                    //write bytes to file
+                    try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                        fos.write(data);
+>>>>>>> 077192aabd968d17f1e21754b21ea380cdcaf0ae
                     }
 
                     //stor has been performed, terminate the connection
