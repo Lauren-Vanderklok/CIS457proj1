@@ -137,6 +137,11 @@ import javax.swing.*;
                     //read data from client
                     byte[] dataIn = new byte[clientInput.readByte()];
 
+                    //added due to java.io.EOFException
+                    while(clientInput.available() == 0) {
+                        Thread.sleep(10);
+                    }
+
                     //get the working directory
                     String filePath = System.getProperty("user.dir") + "/";
                     //get the file name from the client
