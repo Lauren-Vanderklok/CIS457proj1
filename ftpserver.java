@@ -25,7 +25,7 @@ public class ftpserver extends Thread {
     int count = 1;
 
     /** determines if a connection has been formed */
-    boolean clientgo = true;
+   // boolean clientgo = true;
         
     /**********************************************************************
     * Initializer method for the FTPserver.
@@ -200,17 +200,17 @@ public class ftpserver extends Thread {
             }
 
             //close command
-            else if (clientCommand.equals("close:")) {
+            else if (clientCommand.equals("close")) {
 				System.out.println("Closing connection " + connectionSocket.getInetAddress().getHostName() + ".");
-                Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-                DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
+                //Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                //DataOutputStream serverOutput = new DataOutputStream(dataSocket.getOutputStream());
 
                 outToClient.close();
                 inFromClient.close();
                 connectionSocket.close();
-                dataSocket.close();
-                clientgo = false;
-                serverOutput.writeUTF("close");
+                //dataSocket.close();
+               // clientgo = false;
+                //serverOutput.writeUTF("close");
                 return;
 			}
         }
