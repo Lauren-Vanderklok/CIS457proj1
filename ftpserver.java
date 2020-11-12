@@ -5,13 +5,13 @@ import java.text.*;
 import java.lang.*;
 import javax.swing.*;
 
-    public class ftpserver extends Thread{ 
+    public class ftpserver extends Thread { 
         
         /** controlSocket that reads and sends command outputs to the client */
         private Socket connectionSocket;
 
         int port = 8909;
-        int count=1;
+        int count = 1;
    
         public ftpserver(Socket connectionSocket)  {
 	        this.connectionSocket = connectionSocket;
@@ -102,8 +102,32 @@ import javax.swing.*;
 
                 if(clientCommand.equals("get:"))
                 {
-                   
+                    //if(fileName not supplied) {
+                        //System.out.println("No file supplied");
+                        //outToClient.writeInt(550);
+                        //continue;
+                    //}
+
+                    //String filePath = System.getProperty("user.dir") + "/";
+                    //File fileToSend = new File(filePath + something);
+                    
+                    //if(fileToSend does not exist) {
+                        //System.out.println("File does not exist.");
+                        //outToClient.writeInt(550);
+                        //continue;
+                    //}
+                    //else {
+                        //open connection with the client
+                        Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
+                        DataInputStream clientInput = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
+
+
+
+
+                        clientInput.close();
+                        dataSocket.close();
                 }
+
                 if(clientCommand.equals("stor:"))
                 {
                     Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
@@ -121,9 +145,6 @@ import javax.swing.*;
 
                     System.out.println("Storing " + fileName + " in the current directory")
                     
-                    //read the bytes to file
-                    clientInput.readFully(dataIn);
-
                     //write bytes to file
                     try (FileOutputStream fos = new FileOutputStream(filePath)) {
                         fos.write(dataIn);
