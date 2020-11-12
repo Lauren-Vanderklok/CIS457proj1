@@ -15,7 +15,7 @@ import javax.swing.*;
 **********************************************************************/
 public class ftpserver extends Thread { 
         
-    /** controlSocket that reads and sends command outputs to the client */
+    /** socket that reads and sends command outputs to the client */
     private Socket connectionSocket;
 
     /** port number modeled after one of our groupmates Gnumber */
@@ -201,12 +201,16 @@ public class ftpserver extends Thread {
 
             //close command
             else if (clientCommand.equals("close:")) {
-				System.out.println("Closing connection " + connectionSocket.getInetAddress().getHostName() + ".");
-				outToClient.close();
-				inFromClient.close();
-				connectionSocket.close();
-				clientgo = false;
-				return;
+				System.out.println("Closing connection " + 
+                            connectionSocket.getInetAddress().getHostName() + ".");
+                DataOutputStream serverOutput = new DataOutputStream(connectionSocket.getOutputStream());
+
+                outToClient.close();
+                inFromClient.close();
+                connectionSocket.close();
+                clientgo = false;
+                serverOutput.writeUTF("close");
+                return;
 			}
         }
     }
