@@ -91,9 +91,6 @@ class FTPClient {
 
                     }
 
-
-
-
                     write.print(buffer);
 
                     buffer = null;
@@ -141,8 +138,9 @@ class FTPClient {
                         clientgo = false;
                         ControlSocket.close();
                         //this may need to be added to idk
+                    }else {
+                        System.out.print("invalid command");
                     }
-                    System.out.print("No server exists with that name or server not listening on that port try agian");
                 }
 
 
