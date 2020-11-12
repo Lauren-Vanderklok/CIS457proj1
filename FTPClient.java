@@ -96,11 +96,11 @@ public class FTPClient {
 
                             if (line.equals("eof"))
                                 break;
-                            System.out.println(error);
+
                             error = line;
                         }
 
-
+                            System.out.println(error);
 
                         if (error.equals("status code 200. ok")) {
 
