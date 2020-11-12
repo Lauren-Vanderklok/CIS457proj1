@@ -82,44 +82,61 @@ public class FTPClient {
                 } else if (sentence.startsWith("get: ")) {
 
                     System.out.println(port);
-                    ServerSocket welcomeData = new ServerSocket(port); //opens port to listen to data connection
+
                     System.out.println("\n \n Downloading File ...:");
                     outToServer.writeBytes(port + " " + sentence + " " + '\n');
-                    String filename = sentence.substring(5);
-                    File downloadedFile = new File(filename);
-                    PrintWriter write = new PrintWriter(downloadedFile);
-                    String buffer = ""; //because printwriter has no append function for strings, Im storing everything in this and then writing it to the file
-                    //we may want to change this later but this seems simple and workable for now
+                    ServerSocket welcomeData = new ServerSocket(port); //opens port to listen to data connection
                     Socket dataSocket = welcomeData.accept(); //accept data connection
                     DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
 
-                        while (true) {
-                            String error = inData.readUTF();
+                    String error = "";
 
-                            if (error.equals("eof"))
+                        while (true) {
+                            String line = inData.readUTF();
+
+                            if (line.equals("eof"))
                                 break;
                             System.out.println(error);
+                            error = line;
                         }
 
-                        while (true) {
-
-                        modifiedSentence = inData.readUTF();
 
 
+                        if (error.equals("status code 200. ok")) {
 
-                        if (modifiedSentence.equals("eof")) {
-                            break;
+
+
+                            String filename = sentence.substring(5);
+                            File downloadedFile = new File(filename);
+
+                            PrintWriter write = new PrintWriter(downloadedFile);
+
+                            String buffer = ""; //because printwriter has no append function for strings, Im storing everything in this and then writing it to the file
+
+
+
+                            while (true) {
+
+                                modifiedSentence = inData.readUTF();
+
+
+
+                                if (modifiedSentence.equals("eof")) {
+                                    break;
+                                }
+                                buffer = buffer.concat(modifiedSentence);
+                                buffer = buffer.concat("\n");
+
+                            }
+
+                            write.print(buffer);
+
+                            buffer = null;
+                            modifiedSentence = null;
+                            write.close();
+
                         }
-                        buffer = buffer.concat(modifiedSentence);
-                        buffer = buffer.concat("\n");
 
-                    }
-
-                    write.print(buffer);
-
-                    buffer = null;
-                    modifiedSentence = null;
-                    write.close();
                     welcomeData.close();
                     dataSocket.close();
                     System.out.println("\nWhat would you like to do next: \nget: file.txt ||  stor: file.txt  || close");

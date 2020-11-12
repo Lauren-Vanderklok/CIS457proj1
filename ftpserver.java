@@ -139,7 +139,7 @@ public class ftpserver extends Thread {
 
                     serverOutput.writeUTF("status code: 550. file does not exist");
                     serverOutput.writeUTF("eof");
-                    serverOutput.writeUTF("eof");
+
                 }
                 else {
 
@@ -153,7 +153,9 @@ public class ftpserver extends Thread {
 
                     while (read.hasNextLine()) {
                         line = read.nextLine();
+
                         serverOutput.writeUTF(line);
+
                     }
                     serverOutput.writeUTF("eof");
                     read.close();
