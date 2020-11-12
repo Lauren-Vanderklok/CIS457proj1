@@ -12,6 +12,8 @@ import javax.swing.*;
 
         int port = 8909;
         int count = 1;
+
+        boolean clientgo = true;
    
         public ftpserver(Socket connectionSocket)  {
 	        this.connectionSocket = connectionSocket;
@@ -60,7 +62,7 @@ import javax.swing.*;
                 //System.out.println(clientCommand);
 
 
-                  if(clientCommand.equals("list:")) { 
+                if(clientCommand.equals("list:")) { 
                     String curDir = System.getProperty("user.dir");
        
                     Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
@@ -70,13 +72,13 @@ import javax.swing.*;
     
                     String[] children = dir.list();
                     if(children == null) 
-                      {
-                          // Either dir does not exist or is not a directory
-                      } 
-                      else 
-                      {
-                          for (int i=0; i<children.length; i++)
-                          {
+                    {
+                        // Either dir does not exist or is not a directory
+                    } 
+                    else 
+                    {
+                        for (int i=0; i<children.length; i++)
+                        {
                             // Get filename of file or directory
                             String filename = children[i];
 
@@ -90,9 +92,9 @@ import javax.swing.*;
                             }//if(i-1)
 
      
-                          }//for
+                        }//for
 
-                           dataSocket.close();
+                    dataSocket.close();
 		            //System.out.println("Data Socket closed");
                     }//else
         
@@ -100,7 +102,7 @@ import javax.swing.*;
                 }//if list:
 
 
-                if(clientCommand.equals("get:"))
+                else if(clientCommand.equals("get:"))
                 {
                         String filename = tokens.nextToken();
                         System.out.println("filename:" + filename + "...");
@@ -131,14 +133,14 @@ import javax.swing.*;
 
                 }
 
-                if(clientCommand.equals("stor:"))
+                else if(clientCommand.equals("stor:"))
                 {
                     Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
                     DataInputStream clientInput = new DataInputStream(
                     new BufferedInputStream(dataSocket.getInputStream()));
                     
                     //read data from client
-                    byte[] dataIn = new byte[clientInput.readByte()];
+                    data = new byte[clientInput.readByte()];
 
                     //added due to java.io.EOFException
                     while(clientInput.available() == 0) {
@@ -154,13 +156,23 @@ import javax.swing.*;
                 
                     //write bytes to file
                     try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                        fos.write(dataIn);
+                        fos.write(data);
                     }
 
                     //stor has been performed, terminate the connection
                     clientInput.close();
                     dataSocket.close();
                 }
+
+                else if (clientCommand.equals("close")) {
+					System.out.println("Closing connection " + 
+							connectionSocket.getInetAddress().getHostName() + ".");
+					outToClient.close();
+					inFromClient.close();
+					connectionSocket.close();
+					clientgo = false;
+					return;
+				}
             }
             //main
         }
