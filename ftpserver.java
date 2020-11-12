@@ -102,23 +102,6 @@ import javax.swing.*;
 
                 if(clientCommand.equals("get:"))
                 {
-                    //if(fileName not supplied) {
-                        //System.out.println("No file supplied");
-                        //outToClient.writeInt(550);
-                        //continue;
-                    //}
-
-                    //String filePath = System.getProperty("user.dir") + "/";
-                    //File fileToSend = new File(filePath + something);
-                    
-                    //if(fileToSend does not exist) {
-                        //System.out.println("File does not exist.");
-                        //outToClient.writeInt(550);
-                        //continue;
-                    //}
-                    //else {
-                        //open connection with the client
-
                         String filename = tokens.nextToken();
                         System.out.println("filename:" + filename + "...");
                         File file = new File(filename);
@@ -158,19 +141,20 @@ import javax.swing.*;
                     byte[] dataIn = new byte[clientInput.readByte()];
 
                     //added due to java.io.EOFException
-                    while(clientInput.available() != 0) {
-                         //get the working directory
-                        String filePath = System.getProperty("user.dir") + "/";
-                        //get the file name from the client
-                        String fileName = clientInput.readUTF();
-                        filePath += fileName;
+                    while(clientInput.available() == 0) {
+                        Thread.sleep(10);
+                    }
+                    //get the working directory
+                    String filePath = System.getProperty("user.dir") + "/";
+                    //get the file name from the client
+                    String fileName = clientInput.readUTF();
+                    filePath += fileName;
 
-                        System.out.println("Storing " + fileName + " in the current directory")
-                    
-                        //write bytes to file
-                        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                            fos.write(dataIn);
-                        }
+                    System.out.println("Storing " + fileName + " in the current directory");
+                
+                    //write bytes to file
+                    try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                        fos.write(dataIn);
                     }
 
                     //stor has been performed, terminate the connection
