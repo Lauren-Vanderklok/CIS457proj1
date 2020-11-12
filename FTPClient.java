@@ -104,36 +104,49 @@ public class FTPClient {
 
                         if (error.equals("status code 200. ok")) {
 
+                            ArrayList<Byte> byteArrayList = new ArrayList<Byte>();
 
+                          //  ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 
-                            String filename = sentence.substring(5);
-                            File downloadedFile = new File(filename);
+//                            String filename = sentence.substring(5);
+//                            File downloadedFile = new File(filename);
+//
+//                            PrintWriter write = new PrintWriter(downloadedFile);
+//
+//                            String buffer = ""; //because printwriter has no append function for strings, Im storing everything in this and then writing it to the file
 
-                            PrintWriter write = new PrintWriter(downloadedFile);
-
-                            String buffer = ""; //because printwriter has no append function for strings, Im storing everything in this and then writing it to the file
-
-
+                            int i = 0;
 
                             while (true) {
 
-                                modifiedSentence = inData.readUTF();
+                                try {
+                                    byteArrayList.add(inData.readByte());
+                                    System.out.print(byteArrayList.get(i).toString());
+                                    ++i;
+                                    //byteStream.write(inData.readByte());
 
-
-
-                                if (modifiedSentence.equals("eof")) {
+                                }catch (EOFException e){
                                     break;
                                 }
-                                buffer = buffer.concat(modifiedSentence);
-                                buffer = buffer.concat("\n");
+
+
+
+
+
+//                                modifiedSentence = inData.readUTF();
+//                                if (modifiedSentence.equals("eof")) {
+//                                    break;
+//                                }
+//                                buffer = buffer.concat(modifiedSentence);
+//                                buffer = buffer.concat("\n");
 
                             }
 
-                            write.print(buffer);
+                            //write.print(buffer);
 
-                            buffer = null;
-                            modifiedSentence = null;
-                            write.close();
+                            //buffer = null;
+                            //modifiedSentence = null;
+                            //write.close();
 
                         }
 
