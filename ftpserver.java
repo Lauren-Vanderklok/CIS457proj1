@@ -30,7 +30,7 @@ import javax.swing.*;
 		
 	    } catch (Exception e) {
 		    System.out.println(e);
-	    }
+        }
 	 
 	}
 	
@@ -143,20 +143,19 @@ import javax.swing.*;
                     data = new byte[clientInput.readByte()];
 
                     //added due to java.io.EOFException
-                    while(clientInput.available() == 0) {
-                        Thread.sleep(10);
-                    }
-                    //get the working directory
-                    String filePath = System.getProperty("user.dir") + "/";
-                    //get the file name from the client
-                    String fileName = clientInput.readUTF();
-                    filePath += fileName;
+                    while(clientInput.available() != 0) {
+                        //get the working directory
+                        String filePath = System.getProperty("user.dir") + "/";
+                        //get the file name from the client
+                        String fileName = clientInput.readUTF();
+                        filePath += fileName;
 
-                    System.out.println("Storing " + fileName + " in the current directory");
+                        System.out.println("Storing " + fileName + " in the current directory");
                 
-                    //write bytes to file
-                    try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                        fos.write(data);
+                        //write bytes to file
+                        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                            fos.write(data);
+                        }
                     }
 
                     //stor has been performed, terminate the connection
